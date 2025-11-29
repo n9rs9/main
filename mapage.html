@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Médusa></title>
+    <link href="https://online-fonts.com/css?font=Proxima+Nova" rel="stylesheet">
+    <style>
+        /* CONSTANTES */
+        :root {
+            --transition-speed: 0.22s; /* Nouvelle vitesse de transition */
+        }
+        
+        body{margin:0;font-family:'Proxima Nova',sans-serif;font-weight:400;font-style:normal;background:#111;color:white;display:flex;flex-direction:column;}
+        header{display:flex;justify-content:space-between;align-items:center;padding:20px 40px;background-color:transparent;margin-top:30px;}
+        .logo{font-size:32.9px;margin-left:100px;font-family:'Proxima Nova',sans-serif;font-weight:900;font-style:italic;flex-shrink:0;color:white;letter-spacing:-1.5px;}
+        .logo .logo-e{color:white;}
+        .logo .logo-accent{color:#e81c5a;position:relative;font-size:1.3em;top:16px;left:-6.5px;display:inline-block;line-height:1;}
+        .logo .logo-chevrons{color:#e81c5a;position:relative;top:4px;letter-spacing:1px;}
+        .letter-strip .accent-mark{position:absolute;display:block;transition:color .19s ease,-webkit-text-stroke .19s ease;font-size:402px;top:65px;left:120px;color:transparent;-webkit-text-stroke:2px #e81c5a !important;text-shadow:none;pointer-events:none;z-index:3;line-height:1;overflow:visible; filter: none;}
+        .panel:nth-child(2):hover .letter-strip .accent-mark,.panel:nth-child(3):hover .letter-strip .accent-mark,.panel:nth-child(4):hover .letter-strip .accent-mark,.panel:nth-child(5):hover .letter-strip .accent-mark,.panel:nth-child(7):hover .letter-strip .accent-mark,.panels:has(.panel:nth-child(4):hover) .letter-strip .accent-mark{color:#e81c5a!important;-webkit-text-stroke:2px #e81c5a!important;}
+        nav{margin-top:5px;flex-grow:1;text-align:center;}
+        .nav-links{display:inline-block;margin-left:-60px;}
+        .donate-button-wrapper{flex-shrink:0;margin-top:5px;margin-right:100px;}
+        .donate-button-wrapper a{background-color:#DD296C;color:white;text-decoration:none;padding:10px 25px;border-radius:10px;font-family:'Proxima Nova',sans-serif;font-weight:700;font-style:normal;transition:background-color .3s ease,box-shadow .3s ease;display:inline-block;}
+        .donate-button-wrapper a:hover{background-color:#CC2563;box-shadow:0 0 15px rgba(255,64,129,.8),0 0 5px rgba(255,64,129,.5);}
+        nav a{margin:0 15px;text-decoration:none;color:rgba(255,255,255,.5);font-family:'Proxima Nova',sans-serif;font-weight:700;font-style:normal;display:inline-block;position:relative;padding-bottom:5px;transition:color .3s ease;}
+        nav a:hover{color:white;text-shadow:0 0 5px rgba(255,255,255,.5);}
+        nav a::after{content:'';position:absolute;width:100%;height:2px;background-color:white;bottom:0;left:0;transform:scaleX(0);transform-origin:bottom center;transition:transform .3s ease-out;}
+        nav a:hover::after{transform:scaleX(1);}
+        .panels{flex-grow:1;display:flex;justify-content:center;align-items:flex-start;margin-top:-20px;padding:70px 20px 60px;gap:19px;flex-wrap:nowrap;height:1200px;}
+        
+        /* FONDS N&B PAR DÉFAUT + TRANSITION AJUSTÉE */
+        .panel{
+            width:223px;
+            height:600px;
+            /* Ces propriétés sont déplacées sur ::before pour l'isolation du filtre */
+            background-color:#333;
+            border-radius:18px;
+            position:relative;
+            overflow:hidden;
+            margin-top:10px;
+            transition:background-color .3s ease,box-shadow .3s ease;
+            cursor:pointer;
+            border:none;
+            box-shadow:inset 0 0 0 1px rgba(204,204,204,.15);
+            z-index:10;
+        }
+
+        /* NOUVELLE RÈGLE: FOND EN N&B ISOLÉ VIA PSEUDO-ÉLÉMENT */
+        .panel::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Hérite du background-image/size/position défini sur le panel individuel */
+            background-color: inherit;
+            background-image: inherit;
+            background-size: inherit;
+            background-position: inherit;
+            background-repeat: inherit;
+            filter: grayscale(100%); /* Le filtre N&B est UNIQUEMENT ici */
+            transition: filter var(--transition-speed) ease;
+            z-index: 1; /* Derrière le contenu (texte, image) */
+        }
+        
+        /* SURVOL: RETOUR À LA COULEUR DU FOND */
+        .panel:hover::before {
+            filter: none;
+        }
+        
+        /* EXCLUSION DU PANNEAU 4 (RESTE EN COULEUR) */
+        .panel:nth-child(4)::before {
+            filter: none;
+        }
+
+        /* NOUVELLE RÈGLE: TOUS LES FONDS EN COULEUR LORS DU SURVOL DU PANNEAU 4 */
+        .panels:has(.panel:nth-child(4):hover) .panel{
+            box-shadow:0 0 80px rgba(179,0,255,.2),0 0 40px rgba(179,0,255,.1),inset 0 0 0 1px rgba(204,204,204,.15);
+        }
+        
+        .panels:has(.panel:nth-child(4):hover) .panel::before {
+            filter: none; /* Tous les fonds passent en couleur */
+        }
+
+        /* RÈGLES INDIVIDUELLES (maintenant les vrais fonds pour l'héritage de ::before): */
+        .panel:nth-child(1){--raul-bautista-bg-size:cover;--raul-bautista-bg-pos-x:calc(50% - 200px);--raul-bautista-bg-pos-y:center;background-image:url('https://i.redd.it/all-the-background-art-for-the-supporting-characters-and-v0-f0vtwrjvrdze1.png?width=3840&format=png&auto=webp&s=9a39b82f2fca45e7b0386ea9a49a96a4b0dfb1a7');background-size:var(--raul-bautista-bg-size);background-position:var(--raul-bautista-bg-pos-x) var(--raul-bautista-bg-pos-y);background-repeat:no-repeat;background-color:#333;transition:background-color .3s ease;}
+        .panel:nth-child(1):hover{background-color:#444;}
+        .panel:nth-child(2){--panel2-bg-size:500%;--panel2-bg-pos-x:calc(50% - 330px);--panel2-bg-pos-y:center;background-image:url('https://images7.alphacoders.com/137/1371029.png');background-size:var(--panel2-bg-size);background-position:var(--panel2-bg-pos-x) var(--panel2-bg-pos-y);background-repeat:no-repeat;background-color:#333;transition:background-color .3s ease;}
+        .panel:nth-child(2):hover{background-color:#444;}
+        .panel:nth-child(3){--brian-heder-bg-size:cover;--brian-heder-bg-pos-x:center;--brian-heder-bg-pos-y:calc(50% - 40px);background-image:url('https://preview.redd.it/artwork-backgrounds-v0-udmx1rl9b8ze1.jpg?width=1080&crop=smart&auto=webp&s=5576967cfbe0c256a92da4ef4be49b4658f0211c');background-size:var(--brian-heder-bg-size);background-position:var(--brian-heder-bg-pos-x) var(--brian-heder-bg-pos-y);background-repeat:no-repeat;background-color:#333;transition:background-color .3s ease;}
+        .panel:nth-child(3):hover{background-color:#444;}
+        .panel:nth-child(4){background-image:url('https://www.igrandtheftauto.com/content/images/rockstar-games-official-street-background-artwork.png');background-size:cover;background-position:calc(50% + 55px) center;background-repeat:no-repeat;background-color:#333;transition:background-color .3s ease;}
+        .panel:nth-child(4):hover{background-color:#444;}
+        .panel:nth-child(5){--drequan-priest-bg-size:cover;--drequan-priest-bg-pos-x:calc(50% + 200px);--drequan-priest-bg-pos-y:center;background-image:url('https://www.gtabase.com/igallery/gta-6-artworks/drequanpriest-1600.jpg');background-size:var(--drequan-priest-bg-size);background-position:var(--drequan-priest-bg-pos-x) var(--drequan-priest-bg-pos-y);background-repeat:no-repeat;background-color:#333;transition:background-color .3s ease;}
+        .panel:nth-child(5):hover{background-color:#444;}
+        .panel:nth-child(6){--panel6-bg-size:cover;--panel6-bg-pos-x:calc(50% + 205px);--panel6-bg-pos-y:center;background-image:url('https://preview.redd.it/etn5ais6zhd41.jpg?width=1080&crop=smart&auto=webp&s=00feccbf9d76cfc1ae3bed7eb35366df1ade9dc8');background-size:var(--panel6-bg-size);background-position:var(--panel6-bg-pos-x) var(--panel6-bg-pos-y);background-repeat:no-repeat;background-color:#333;transition:background-color .3s ease;}
+        .panel:nth-child(6):hover{background-color:#444;}
+        .panel:nth-child(7){--lester-bg-size:500%;--lester-bg-pos:calc(50% - 170px) center;background-image:url('https://i.imgur.com/kWtlQfz.jpeg');background-size:var(--lester-bg-size);background-position:var(--lester-bg-pos);background-repeat:no-repeat;background-color:#333;transition:background-color .3s ease;}
+        .panel:nth-child(7):hover{background-color:#444;}
+        
+        .panel-link{display:block;text-decoration:none;color:inherit;height:100%;width:100%;position:relative;}
+        .panel::after{content:"";position:absolute;bottom:0;left:0;width:100%;height:100%;background:linear-gradient(to top,rgba(255,64,129,1.0),transparent);opacity:0;transition:opacity .3s ease;pointer-events:none;z-index:2;}
+        .panel:hover::after{opacity:1;}
+        .panel:nth-child(4)::after,.panels:has(.panel:nth-child(4):hover) .panel::after{opacity:1;}
+        
+        /* PERSONNAGES N&B PAR DÉFAUT + TRANSITION AJUSTÉE */
+        .panel-image{position:absolute;top:50%;left:50%;width:110%;height:110%;object-fit:contain;z-index:4;display:block;transition:transform .3s ease,filter var(--transition-speed) ease;filter:grayscale(100%);}
+        .panel:hover .panel-image{filter:none;} /* Retour à la couleur au survol du panneau */
+
+        /* NOUVELLE RÈGLE: TOUS LES PERSONNAGES EN COULEUR LORS DU SURVOL DU PANNEAU 4 */
+        .panels:has(.panel:nth-child(4):hover) .panel-image{
+            filter: none; /* Retire le N&B du personnage */
+        }
+        
+        /* CORRECTION LESTER: Assure que l'image de Lester retrouve la couleur ET la bonne position au survol du panneau 4 */
+        .panels:has(.panel:nth-child(4):hover) .panel:nth-child(7) .panel-image {
+            filter: none;
+            transform:translate(calc(-50% + var(--lester-pos-x)),calc(-50% + var(--lester-pos-y) - var(--lester-hover-lift))) rotate(-15deg);
+        }
+
+        .panel:nth-child(1) .panel-image{--raul-bautista-size:386%;--raul-bautista-pos-x:164px;--raul-bautista-pos-y:150px;--raul-bautista-hover-lift:25px;width:var(--raul-bautista-size);height:var(--raul-bautista-size);transform:translate(calc(-50% + var(--raul-bautista-pos-x)),calc(-50% + var(--raul-bautista-pos-y)));}
+        .panel:nth-child(1):hover .panel-image{transform:translate(calc(-50% + var(--raul-bautista-pos-x)),calc(-50% + var(--raul-bautista-pos-y) - var(--raul-bautista-hover-lift)));}
+        .panels:has(.panel:nth-child(4):hover) .panel:nth-child(1) .panel-image{transform:translate(calc(-50% + var(--raul-bautista-pos-x)),calc(-50% + var(--raul-bautista-pos-y) - var(--raul-bautista-hover-lift)));}
+        .panel:nth-child(2) .panel-image{--panel2-size:125%;--panel2-pos-x:0px;--panel2-pos-y:135px;--panel2-hover-lift:25px;width:var(--panel2-size);height:var(--panel2-size);transform:translate(calc(-50% + var(--panel2-pos-x)),calc(-50% + var(--panel2-pos-y)));}
+        .panel:nth-child(2):hover .panel-image{transform:translate(calc(-50% + var(--panel2-pos-x)),calc(-50% + var(--panel2-pos-y) - var(--panel2-hover-lift)));}
+        .panels:has(.panel:nth-child(4):hover) .panel:nth-child(2) .panel-image{transform:translate(calc(-50% + var(--panel2-pos-x)),calc(-50% + var(--panel2-pos-y) - var(--panel2-hover-lift)));}
+        .panel:nth-child(3) .panel-image{--brian-heder-size:350%;--brian-heder-pos-x:-110px;--brian-heder-pos-y:95px;--brian-heder-hover-lift:25px;width:var(--brian-heder-size);height:var(--brian-heder-size);transform:translate(calc(-50% + var(--brian-heder-pos-x)),calc(-50% + var(--brian-heder-pos-y)));}
+        .panel:nth-child(3):hover .panel-image{transform:translate(calc(-50% + var(--brian-heder-pos-x)),calc(-50% + var(--brian-heder-pos-y) - var(--brian-heder-hover-lift)));}
+        .panel:nth-child(6) .panel-image{--panel6-size:145%;--panel6-pos-x:calc(50% - 190px);--panel6-pos-y:calc(50% - 293px);--panel6-hover-lift:25px;width:var(--panel6-size);height:var(--panel6-size);transform:translate(calc(-50% + var(--panel6-pos-x)),calc(-50% + var(--panel6-pos-y)));}
+        .panel:nth-child(6):hover .panel-image{transform:translate(calc(-50% + var(--panel6-pos-x)),calc(-50% + var(--panel6-pos-y) - var(--panel6-hover-lift)));}
+        .panels:has(.panel:nth-child(4):hover) .panel:nth-child(6) .panel-image{transform:translate(calc(-50% + var(--panel6-pos-x)),calc(-50% + var(--panel6-pos-y) - var(--panel6-hover-lift)));}
+        .panel:nth-child(5) .panel-image{--drequan-priest-size:320%;--drequan-priest-pos-x:-97px;--drequan-priest-pos-y:118px;--drequan-priest-hover-lift:25px;width:var(--drequan-priest-size);height:var(--drequan-priest-size);transform:translate(calc(-50% + var(--drequan-priest-pos-x)),calc(-50% + var(--drequan-priest-pos-y)));}
+        .panel:nth-child(5):hover .panel-image{transform:translate(calc(-50% + var(--drequan-priest-pos-x)),calc(-50% + var(--drequan-priest-pos-y) - var(--drequan-priest-hover-lift)));}
+        .panel:nth-child(7) .panel-image{--lester-size:110%;--lester-pos-x:25px;--lester-pos-y:175px;--lester-hover-lift:25px;width:var(--lester-size);height:var(--lester-size);transform:translate(calc(-50% + var(--lester-pos-x)),calc(-50% + var(--lester-pos-y)))rotate(-15deg);}
+        .panel:nth-child(7):hover .panel-image{transform:translate(calc(-50% + var(--lester-pos-x)),calc(-50% + var(--lester-pos-y) - var(--lester-hover-lift))) rotate(-15deg);}
+        
+        .panels:has(.panel:nth-child(4):hover) .panel:nth-child(3) .panel-image{transform:translate(calc(-50% + var(--brian-heder-pos-x)),calc(-50% + var(--brian-heder-pos-y) - var(--brian-heder-hover-lift)));}
+        .panels:has(.panel:nth-child(4):hover) .panel:nth-child(5) .panel-image{transform:translate(calc(-50% + var(--drequan-priest-pos-x)),calc(-50% + var(--drequan-priest-pos-y) - var(--drequan-priest-hover-lift)));}
+        .panels:has(.panel:nth-child(4):hover) .panel:nth-child(1) .panel-image{transform:translate(calc(-50% + var(--raul-bautista-pos-x)),calc(-50% + var(--raul-bautista-pos-y) - var(--raul-bautista-hover-lift)));}
+        .panels:has(.panel:nth-child(4):hover) .panel:nth-child(2) .panel-image{transform:translate(calc(-50% + var(--panel2-pos-x)),calc(-50% + var(--panel2-pos-y) - var(--panel2-hover-lift)));}
+        .panels:has(.panel:nth-child(4):hover) .panel:nth-child(6) .panel-image{transform:translate(calc(-50% + var(--panel6-pos-x)),calc(-50% + var(--panel6-pos-y) - var(--panel6-hover-lift)));}
+        .panels:has(.panel:nth-child(4):hover) .letter-strip{color:white;-webkit-text-stroke:2px white;}
+        .panels:has(.panel:nth-child(4):hover) .letter-strip .chevrons,.panels:has(.panel:nth-child(4):hover) .letter-strip .accent-mark{color:#e81c5a!important;-webkit-text-stroke:2px #e81c5a!important;}
+        .panel:nth-child(1){background-color:#333;z-index:initial;}
+        .panel:nth-child(1):hover{background-color:#444;}
+        .panel:nth-child(1):hover .letter-strip .chevrons{color:#e81c5a;-webkit-text-stroke:2px #e81c5a;}
+        .panel:nth-child(1):hover .letter-strip .accent-mark{color:transparent;-webkit-text-stroke:2px #e81c5a;}
+        .panel:nth-child(2):hover .letter-strip,.panel:nth-child(3):hover .letter-strip,.panel:nth-child(5):hover .letter-strip,.panel:nth-child(7):hover .letter-strip,.panel:nth-child(6):hover .letter-strip{color:white;-webkit-text-stroke:2px white;}
+        .panel:nth-child(2):hover .letter-strip .chevrons,.panel:nth-child(3):hover .letter-strip .chevrons,.panel:nth-child(5):hover .letter-strip .chevrons,.panel:nth-child(7):hover .letter-strip .chevrons,.panel:nth-child(6):hover .letter-strip .chevrons{color:#e81c5a!important;-webkit-text-stroke:2px #e81c5a!important;}
+        .panel:nth-child(2):hover .letter-strip .accent-mark,.panel:nth-child(3):hover .letter-strip .accent-mark,.panel:nth-child(5):hover .letter-strip .accent-mark,.panel:nth-child(7):hover .letter-strip .accent-mark,.panel:nth-child(6):hover .letter-strip .accent-mark{color:#e81c5a!important;-webkit-text-stroke:2px #e81c5a!important;}
+        .panel-info{position:absolute;bottom:45px;left:50%;transform:translateX(-50%);text-align:center;opacity:0;z-index:5;font-weight:700;font-style:normal;font-size:17px;line-height:1.1;transition:opacity .3s ease;text-shadow:0 0 20px rgba(0,0,0,4);}
+        .panel-info span{color:rgba(255,255,255,.7);margin-bottom:6px;font-size:.8em;}
+        .panel:hover .panel-info{opacity:1;}
+        .panel:nth-child(4) .panel-info,.panel:nth-child(4):hover .panel-info{opacity:0!important;}
+        .start-text{position:absolute;bottom:45px;left:50%;transform:translateX(-50%);text-align:center;color:white;font-size:19px;font-weight:700;font-style:normal;pointer-events:none;z-index:5;opacity:0;transition:opacity .3s ease;}
+        .panel:nth-child(4) .start-text,.panel:nth-child(4):hover .start-text{opacity:1;}
+        .panel:nth-child(2) .start-text,.panel:nth-child(3) .start-text,.panel:nth-child(5) .start-text,.panel:nth-child(7) .start-text,.panel:nth-child(6) .start-text{display:none;}
+        .letter-strip{font-family:'Proxima Nova',sans-serif;transition:color .19s ease,-webkit-text-stroke .19s ease;font-size:339.93px;font-weight:900;font-style:italic;color:transparent;-webkit-text-stroke:2px white;white-space:nowrap;pointer-events:none;position:absolute;top:50%;transform:translate(calc(-50% + 15px),calc(-50% - 75px));z-index:3;letter-spacing:-10px; filter: none;}
+        .letter-strip .e-container{display:inline-block;position:relative;}
+        .letter-strip .accent-mark{z-index:3;}
+        .letter-strip .chevrons{position:relative;top:28px;font-size:322.93px;color:transparent;-webkit-text-stroke:2px #e81c5a;text-shadow:none;transition:color .19s ease,-webkit-text-stroke .19s ease; filter: none;}
+        .panel:hover .letter-strip{color:white;-webkit-text-stroke:2px white;}
+        .panel:hover .letter-strip .chevrons{color:#e81c5a;-webkit-text-stroke:2px #e81c5a;}
+        .panel:hover .letter-strip .accent-mark{color:transparent;-webkit-text-stroke:2px #e81c5a;}
+        .panel:nth-child(1) .letter-strip{left:calc(50% + 741px - 35px);}
+        .panel:nth-child(2) .letter-strip{left:calc(50% + 494px - 35px);}
+        .panel:nth-child(3) .letter-strip{left:calc(50% + 247px - 35px);}
+        .panel:nth-child(4) .letter-strip{left:calc(50% - 35px);}
+        .panel:nth-child(5) .letter-strip{left:calc(50% - 247px - 35px);}
+        .panel:nth-child(6) .letter-strip{left:calc(50% - 494px - 35px);}
+        .panel:nth-child(7) .letter-strip{left:calc(50% - 741px - 35px);}
+        .panel-7-circle{
+    position:absolute;
+    top:0;
+    left:0;
+    transform:translate(-53%,-76.8%);
+    width:620px;
+    height:620px;
+    background-color:rgba(138,43,226,.50);
+    border-radius:50%;
+    z-index:2; /* NOUVEAU: Mettre entre le fond (z-index:1) et Lester (z-index:4) */
+    display:block;
+    filter: grayscale(100%);
+    transition: filter var(--transition-speed) ease;
+}
+    .panel:hover .panel-7-circle {
+        filter: none;
+    }
+
+    .panels:has(.panel:nth-child(4):hover) .panel-7-circle {
+        filter: none;
+    }
+
+    .panel-6-triangle{
+        position: absolute;
+        top: 73%;
+        left: 50%;
+        transform: translate(-50%, -50%); /* Centrage et rotation */
+        width: 0;
+        height: 0;
+        /* Création du triangle avec des bordures CSS */
+        border-left: 200px solid transparent;
+        border-right: 200px solid transparent;
+        border-bottom: 346.4px solid rgba(81, 0, 255, 0.60); /* Couleur Rouge 50% transparent */
+    
+    /* Z-index: Au-dessus du fond (1) mais sous l'image de Trevor (4) */
+        z-index: 3; 
+        display: block;
+
+    /* EFFET N&B PAR DÉFAUT */
+        filter: grayscale(100%);
+        transition: filter var(--transition-speed) ease;
+    }
+
+/* SURVOL: Retire le filtre N&B */
+    .panel:nth-child(6):hover .panel-6-triangle {
+        filter: none;
+    }
+
+/* PANNEAU 4 SURVOLÉ: Retire le filtre N&B pour le triangle également */
+    .panels:has(.panel:nth-child(4):hover) .panel-6-triangle {
+        filter: none;
+    }
+
+        .footer{text-align:center;padding:20px;background-color:transparent;font-size:.9em;font-family:'Proxima Nova',sans-serif;font-weight:400;font-style:normal;}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">M<span class="logo-e">e</span><span class="logo-accent">́</span>dusa<span class="logo-chevrons">><</span></div>
+        <nav>
+            <div class="nav-links">
+                <a href="#">RÉSULATS</a>
+                <a href="#">OFFRES</a>
+                <a href="#">FAQ</a>
+                <a href="#">CONTACT</a>
+            </div>
+        </nav>
+        <div class="donate-button-wrapper">
+            <a href="#">DONATE</a>
+        </div>
+    </header>
+    <section class="panels">
+        <div class="panel">
+            <a href="#" class="panel-link">
+                <img src="https://www.gtabase.com/igallery/gta-6-artworks-png/raul-bautista-1600.png" class="panel-image" alt="Artwork Raul Bautista">
+                <div class="letter-strip">M<span class="e-container">e<span class="accent-mark">́</span></span>dusa<span class="chevrons">><</span></div>
+                <div class="panel-info"><span>LIEN</span><br>TÉLÉGRAM</div>
+            </a>
+        </div>
+        <div class="panel">
+            <a href="#" class="panel-link">
+                <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/36c7442c-aed5-4e9a-86ec-0a59dd4c5a37/debievq-437c2d2a-60fa-4735-b23e-a6c4947f3d05.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8zNmM3NDQyYy1hZWQ1LTRlOWEtODZlYy0wYTU5ZGQ0YzVhMzcvZGViaWV2cS00MzdjMmQyYS02MGZhLTQ3MzUtYjIzZS1hNmM0OTQ3ZjNkMDUucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.hYJITB3QqqNfkvejFERpPLaAR0xOTvsyu3-d_ya6f3E" class="panel-image" alt="Artwork Panel 2 Character">
+                <div class="letter-strip">M<span class="e-container">e<span class="accent-mark">́</span></span>dusa<span class="chevrons">><</span></div>
+                <div class="panel-info"><span>LIEN</span><br>INSTA</div>
+            </a>
+        </div>
+        <div class="panel">
+            <a href="#" class="panel-link">
+                <img src="https://www.gtabase.com/igallery/gta-6-artworks-png/brian-heder-1600.png" class="panel-image" alt="Artwork Brian Heder">
+                <div class="letter-strip">M<span class="e-container">e<span class="accent-mark">́</span></span>dusa<span class="chevrons">><</span></div>
+                <div class="panel-info"><span>LIEN</span><br>CASINO</div>
+            </a>
+        </div>
+        <div class="panel">
+            <a href="#" class="panel-link">
+                <div class="letter-strip">M<span class="e-container">e<span class="accent-mark">́</span></span>dusa<span class="chevrons">><</span></div>
+                <div class="start-text">TOUT LES<br>LIENS</div>
+                <div class="panel-info"><span>LIEN</span><br>PLAY</div>
+            </a>
+        </div>
+        <div class="panel">
+            <a href="#" class="panel-link">
+                <img src="https://www.gtabase.com/igallery/gta-6-artworks-png/drequan-priest-1600.png" class="panel-image" alt="Artwork Drequan Priest">
+                <div class="letter-strip">M<span class="e-container">e<span class="accent-mark">́</span></span>dusa<span class="chevrons">><</span></div>
+                <div class="panel-info"><span>LIEN</span><br>CARTES</div>
+            </a>
+        </div>
+        <div class="panel">
+            <a href="#" class="panel-link">
+		<div class="panel-6-triangle"></div>
+                <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/db56b453-3e5a-4e6c-b64b-1cc7d41016b1/debensd-da36d6c2-c604-4dd7-bb0c-f4a5eda40f84.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi9kYjU2YjQ1My0zZTVhLTRlNmMtYjY0Yi0xY2M3ZDQxMDE2YjEvZGViZW5zZC1kYTM2ZDZjMi1jNjA0LTRkZDctYmIwYy1mNGE1ZWRhNDBmODQucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.UuWhDIwUuEIZtK8h3Rd5xw2o8Tm2piUpLIujxh_h2yE" class="panel-image" alt="Artwork Panel 6 Character">
+                <div class="letter-strip">M<span class="e-container">e<span class="accent-mark">́</span></span>dusa<span class="chevrons">><</span></div>
+                <div class="panel-info"><span>LIEN</span><br>SNAP</div>
+            </a>
+        </div>
+        <div class="panel">
+            <a href="#" class="panel-link">
+                <div class="panel-7-circle"></div> 
+                <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/db56b453-3e5a-4e6c-b64b-1cc7d41016b1/debeno7-d3e9de73-fef5-4b52-a2b0-116218b8f602.png/v1/fit/w_533,h_1126/lester___gta_v___png_by_alaanfabioo_debeno7-375w-2x.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTEyNiIsInBhdGgiOiIvZi9kYjU2YjQ1My0zZTVhLTRlNmMtYjY0Yi0xY2M3ZDQxMDE2YjEvZGViZW5vNy1kM2U5ZGU3My1mZWY1LTRiNTItYTJiMC0xMTYyMThiOGY2MDIucG5nIiwid2lkdGgiOiI8PTUzMyJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.450Z01hirO6gk9yVp76Qc0ZV7-eUhEMGQmwLojFPF94" class="panel-image" alt="Image de Lester">
+                <div class="letter-strip">M<span class="e-container">e<span class="accent-mark">́</span></span>dusa<span class="chevrons">><</span></div>
+                <div class="panel-info"><span>LIEN</span><br>DISCORD</div>
+            </a>
+        </div>
+    </section>
+    <div class="footer">
+        © 2025 Médusa><. Tous droits réservés.
+    </div>
+</body>
+</html>
